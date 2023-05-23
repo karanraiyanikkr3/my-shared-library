@@ -6,7 +6,7 @@ def call(String URL) {
     try {
         // Logging into AWS ECR
         withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
-            sh "aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
+            sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
         }
 
         // Cloning Git
@@ -15,14 +15,14 @@ def call(String URL) {
 //        echo '${config.url}'
 
         // Building Docker image
-        sh "sudo docker build -t ${env.IMAGE_REPO_NAME} ."
-        sh "sudo docker images"
+        sh "docker build -t ${env.IMAGE_REPO_NAME} ."
+        sh "docker images"
 
         // Pushing to ECR
         withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
             def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/jenkinsbuild"
-            sh "sudo docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
-            sh "sudo docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
+            sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
+            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
         }
     } catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
