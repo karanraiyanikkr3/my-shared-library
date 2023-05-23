@@ -1,4 +1,4 @@
-def call(Map config = [:]) {
+def call(String URL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "jenkinsbuild"
     env.IMAGE_TAG = "latest"
@@ -11,8 +11,8 @@ def call(Map config = [:]) {
 
         // Cloning Git
         //git 'https://github.com/karanraiyanikkr3/node-todo-cicd.git/'
-        git '"${config.url}"'
-        echo '${config.url}'
+        git url:URL
+//        echo '${config.url}'
 
         // Building Docker image
         sh "docker build -t ${env.IMAGE_REPO_NAME} ."
