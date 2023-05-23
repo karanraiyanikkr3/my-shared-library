@@ -11,7 +11,7 @@ def call(Map config = [:]) {
 
         // Cloning Git
         //git 'https://github.com/karanraiyanikkr3/node-todo-cicd.git/'
-        git '${config.url}'
+        git '"${config.url}"'
         echo '${config.url}'
 
         // Building Docker image
