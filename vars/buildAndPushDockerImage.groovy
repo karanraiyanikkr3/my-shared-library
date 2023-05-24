@@ -1,6 +1,6 @@
 def call(String URL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
-    env.IMAGE_REPO_NAME = "masterportal"
+    env.IMAGE_REPO_NAME = "crestmasterportal"
     env.IMAGE_TAG = "latest"
 
     try {
