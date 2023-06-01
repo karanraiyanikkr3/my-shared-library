@@ -1,4 +1,4 @@
-def call(String $DIR) {
+def call(String DIR) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
