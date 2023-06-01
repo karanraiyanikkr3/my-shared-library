@@ -19,7 +19,8 @@ def anotherMethod(String DIR,String PORTAL) {
         
 
         // Pushing to ECR
-            sh "sudo docker push ${PORTAL}:${env.IMAGE_TAG}"
+//            sh "sudo docker push ${PORTAL}:${env.IMAGE_TAG}"
+            sh "sudo docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
         }
      catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
