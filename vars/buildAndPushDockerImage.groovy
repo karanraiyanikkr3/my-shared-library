@@ -17,9 +17,9 @@ def call(String DIR) {
         def IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         def REPOSITORY_URI = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
         sh "docker tag ${env.IMAGE_REPO_NAME} ${REPOSITORY_URI}:${IMAGE_TAG}"
-        sh "docker tag ${env.IMAGE_REPO_NAME} ${REPOSITORY_URI}:latest"
+        //sh "docker tag ${env.IMAGE_REPO_NAME} ${REPOSITORY_URI}:latest"
         sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
-        sh "docker push ${REPOSITORY_URI}:latest"
+       // sh "docker push ${REPOSITORY_URI}:latest"
     } catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
         error "Building and pushing Docker image failed"
