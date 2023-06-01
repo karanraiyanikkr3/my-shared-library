@@ -2,7 +2,7 @@ def call(String DIR) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
-
+    def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
     try {
         // Logging into AWS ECR
         withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
@@ -20,7 +20,7 @@ def call(String DIR) {
 
         // Pushing to ECR
         withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
-            def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
+            //def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
            // sh "sudo docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
             sh "sudo docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
         }
