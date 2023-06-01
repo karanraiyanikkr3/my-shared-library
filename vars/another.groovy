@@ -1,6 +1,6 @@
 def anotherMethod(String DIR,String PORTAL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
-//    env.IMAGE_REPO_NAME = ${PORTAL}
+    env.IMAGE_REPO_NAME = ${PORTAL}
     env.IMAGE_TAG = "latest"
     env.AWS_ACCOUNT_ID = "885753452070"
     env.REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${PORTAL}portal"
@@ -12,7 +12,7 @@ def anotherMethod(String DIR,String PORTAL) {
         // Building Docker image
             //sh "sudo docker build -t ${PORTAL}:${env.IMAGE_TAG} $DIR"
                 sh "echo ${env.REPOSITORY_URI}"
-        sh "sudo docker build -t ${REPOSITORY_URI}:${PORTAL} ${DIR}"
+        sh "sudo docker build -t ${REPOSITORY_URI}:${IMAGE_TAG} ${DIR}"
              // sh "sudo docker build -t ${PORTAL} $DIR"
 //                    sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
     
