@@ -16,7 +16,7 @@ def anotherMethod(String DIR,String PORTAL) {
 //                    sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
         sh "echo ${env.REPOSITORY_URI}"
         //    docker tag masterportal:latest 885753452070.dkr.ecr.us-east-1.amazonaws.com/masterportal:latest
-              sh "sudo docker tag ${PORTAL}:${env.IMAGE_TAG}  :${env.IMAGE_TAG}"
+           //   sh "sudo docker tag ${PORTAL}:${env.IMAGE_TAG}  :${env.IMAGE_TAG}"
               sh "sudo docker images"
         
 
