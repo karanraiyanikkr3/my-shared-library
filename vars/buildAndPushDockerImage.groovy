@@ -1,34 +1,47 @@
-def call(String DIR) {
-    env.AWS_DEFAULT_REGION = "us-east-1"
-    env.IMAGE_REPO_NAME = "masterportal"
-    env.IMAGE_TAG = "latest"
-
-    try {
-        // Logging into AWS ECR
-        withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
-            sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
+pipeline {
+    agent any
+    
+    environment {
+        // Define your environment variables
+        AWS_DEFAULT_REGION = 'us-east-1'
+        IMAGE_REPO_NAME = 'my-image-repo'
+        IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        AWS_ACCOUNT_ID = credentials('aws-account-id')
+        REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    }
+    
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                // Build your Docker image
+                sh "docker build -t ${IMAGE_REPO_NAME}:${IMAGE_TAG} ."
+            }
         }
-
-        // Cloning Git
-        //git 'https://github.com/karanraiyanikkr3/node-todo-cicd.git/'
-       // git url:URL
-//        echo '${config.url}'
-
-        // Building Docker image
-        sh "docker build -t ${env.IMAGE_REPO_NAME} $DIR"
-        sh "docker images"
-
-        // Pushing to ECR
-        withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
-            def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
-            sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
-            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
-            
-                        sh "aws ecr put-image-tag-mutability --repository-name ${env.IMAGE_REPO_NAME} --image-tag-mutability IMMUTABLE"
-            sh "aws ecr put-image-scanning-configuration --repository-name ${env.IMAGE_REPO_NAME} --image-scanning-configuration scanOnPush=true"
+        
+        stage('Push Docker Image to ECR') {
+            steps {
+                // Login to ECR
+                withCredentials([string(credentialsId: 'aws-ecr-credentials', variable: 'AWS_ECR_CREDENTIALS')]) {
+                    sh "docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com <<< ${AWS_ECR_CREDENTIALS}"
+                }
+                
+                // Tag the image with latest and version
+                sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:latest"
+                sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
+                
+                // Push the image to ECR
+                sh "docker push ${REPOSITORY_URI}:latest"
+                sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
+            }
         }
-    } catch (Exception e) {
-        echo "Failed to build and push Docker image: ${e.getMessage()}"
-        error "Building and pushing Docker image failed"
+    }
+    
+    post {
+        always {
+            // Cleanup Docker images
+            sh "docker rmi ${IMAGE_REPO_NAME}:${IMAGE_TAG} || true"
+            sh "docker rmi ${REPOSITORY_URI}:latest || true"
+            sh "docker rmi ${REPOSITORY_URI}:${IMAGE_TAG} || true"
+        }
     }
 }
