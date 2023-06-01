@@ -1,4 +1,4 @@
-def method(String DIR) {
+def amethod(String DIR) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
