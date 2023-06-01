@@ -4,6 +4,7 @@ def anotherMethod(String DIR,String PORTAL) {
     env.IMAGE_TAG = "latest"
     env.AWS_ACCOUNT_ID = "885753452070"
     env.REPOSITORY_URI = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${PORTAL}portal"
+                    sh "echo ${env.REPOSITORY_URI}"
 
     try {
         // Logging into AWS ECR
