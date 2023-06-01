@@ -15,7 +15,7 @@ def call(String DIR) {
 //        echo '${config.url}'
 
         // Building Docker image
-        sh "sudo docker build -t ${env.IMAGE_REPO_NAME} $DIR"
+        sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG}" $DIR"
         sh "sudo docker images"
 
         // Pushing to ECR
