@@ -1,4 +1,4 @@
-def call(String URL) {
+def call(String $DIR) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
@@ -11,11 +11,11 @@ def call(String URL) {
 
         // Cloning Git
         //git 'https://github.com/karanraiyanikkr3/node-todo-cicd.git/'
-        git url:URL
+       // git url:URL
 //        echo '${config.url}'
 
         // Building Docker image
-        sh "docker build -t ${env.IMAGE_REPO_NAME} ."
+        sh "docker build -t ${env.IMAGE_REPO_NAME} $DIR"
         sh "docker images"
 
         // Pushing to ECR
