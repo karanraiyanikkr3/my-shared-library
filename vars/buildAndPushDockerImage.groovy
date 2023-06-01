@@ -3,7 +3,7 @@ def call(String DIR) {
     env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
     env.AWS_ACCOUNT_ID = "885753452070"
-    def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
+    env.REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
 
     try {
         // Logging into AWS ECR
