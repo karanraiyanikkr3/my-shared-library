@@ -1,4 +1,4 @@
-def anotherMethod(String DIR,String PORTAL) {
+/*def anotherMethod(String DIR,String PORTAL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = PORTAL
     env.IMAGE_TAG = "latest"
@@ -26,6 +26,35 @@ def anotherMethod(String DIR,String PORTAL) {
             sh "sudo docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
         }
      catch (Exception e) {
+        echo "Failed to build and push Docker image: ${e.getMessage()}"
+        error "Building and pushing Docker image failed"
+    }
+}*/
+
+def anotherMethod(String DIR, String PORTAL) {
+    env.AWS_DEFAULT_REGION = "us-east-1"
+    env.IMAGE_REPO_NAME = PORTAL
+    env.IMAGE_TAG = "latest"
+    env.AWS_ACCOUNT_ID = "885753452070"
+    env.REPOSITORY_URI = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${PORTAL}portal"
+    sh "echo ${env.REPOSITORY_URI}"
+
+    try {
+        // Log in to AWS ECR
+        sh "aws ecr get-login-password --region ${env.AWS_DEFAULT_REGION} | sudo docker login --username AWS --password-stdin ${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com"
+
+        // Remove the current latest tag from the ECR repository
+        sh "aws ecr batch-delete-image --repository-name ${env.IMAGE_REPO_NAME}portal --image-ids imageTag=latest"
+
+        // Build Docker image
+        sh "docker build -t ${env.IMAGE_REPO_NAME}portal ${DIR}"
+        sh "echo docker tag ${env.IMAGE_REPO_NAME}portal:${env.IMAGE_TAG}"
+        sh "docker tag ${env.IMAGE_REPO_NAME}portal:${env.IMAGE_TAG} ${env.REPOSITORY_URI}:${env.IMAGE_TAG}"
+        sh "sudo docker images"
+
+        // Push to ECR
+        sh "sudo docker push ${env.REPOSITORY_URI}:${env.IMAGE_TAG}"
+    } catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
         error "Building and pushing Docker image failed"
     }
