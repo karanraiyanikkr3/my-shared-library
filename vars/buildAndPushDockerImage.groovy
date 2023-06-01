@@ -1,7 +1,7 @@
 def call(String DIR) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = "masterportal"
-    env.AWS_ACCOUNT_ID = credentials('AWS_ACCOUNT_ID')
+    env.IMAGE_TAG = "latest"
 
     try {
         // Logging into AWS ECR
@@ -13,13 +13,14 @@ def call(String DIR) {
         sh "docker build -t ${env.IMAGE_REPO_NAME} $DIR"
         sh "docker images"
 
-        // Pushing to ECR with version and proper tags
-        def IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        def REPOSITORY_URI = "${env.AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
-        sh "docker tag ${env.IMAGE_REPO_NAME} ${REPOSITORY_URI}:${IMAGE_TAG}"
-        //sh "docker tag ${env.IMAGE_REPO_NAME} ${REPOSITORY_URI}:latest"
-        sh "docker push ${REPOSITORY_URI}:${IMAGE_TAG}"
-       // sh "docker push ${REPOSITORY_URI}:latest"
+        // Pushing to ECR with versioning
+        withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
+            def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
+            sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
+            sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
+            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
+            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
+        }
     } catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
         error "Building and pushing Docker image failed"
