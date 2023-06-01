@@ -5,7 +5,7 @@ pipeline {
         // Define your environment variables
         AWS_DEFAULT_REGION = 'us-east-1'
         IMAGE_REPO_NAME = 'my-image-repo'
-        IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+       
         AWS_ACCOUNT_ID = credentials('aws-account-id')
         REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
     }
@@ -24,7 +24,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'aws-ecr-credentials', variable: 'AWS_ECR_CREDENTIALS')]) {
                     sh "docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com <<< ${AWS_ECR_CREDENTIALS}"
                 }
-                
+                 IMAGE_TAG = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                 // Tag the image with latest and version
                 sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:latest"
                 sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:${IMAGE_TAG}"
