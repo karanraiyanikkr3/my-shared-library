@@ -1,4 +1,4 @@
-def call(String DIR,String PORTAL) {
+def anotherMethod(String DIR,String PORTAL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     //env.IMAGE_REPO_NAME = "masterportal"
     env.IMAGE_TAG = "latest"
