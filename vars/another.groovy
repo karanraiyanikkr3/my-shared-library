@@ -11,7 +11,7 @@ def anotherMethod(String DIR,String PORTAL) {
         
         // Building Docker image
             //sh "sudo docker build -t ${PORTAL}:${env.IMAGE_TAG} $DIR"
-              sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
+        sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} ${DIR}"
              // sh "sudo docker build -t ${PORTAL} $DIR"
 //                    sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
         sh "echo ${env.REPOSITORY_URI}"
