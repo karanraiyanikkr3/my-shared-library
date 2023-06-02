@@ -19,7 +19,7 @@ def call(String DIR) {
             sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
             //sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
             //sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
-            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
+            //sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
         }
     } catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
