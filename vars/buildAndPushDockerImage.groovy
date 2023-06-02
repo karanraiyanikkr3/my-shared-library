@@ -17,7 +17,7 @@ def method(String DIR) {
         withCredentials([string(credentialsId: 'AWS_ACCOUNT_ID', variable: 'AWS_ACCOUNT_ID')]) {
             def REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}"
             sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}"
-            //sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
+            sh "docker tag ${env.IMAGE_REPO_NAME}:${env.IMAGE_TAG} ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
             //sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
             sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}-${env.BUILD_NUMBER}"
         }
