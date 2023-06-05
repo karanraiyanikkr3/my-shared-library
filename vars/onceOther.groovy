@@ -11,13 +11,13 @@ def otherMethod(String DIR,String PORTAL) {
             sh "aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
         
         // Building Docker image
-            sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
-//            sh "sudo docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} ."
-            sh "sudo docker images"
+            sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
+//            sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} ."
+            sh "docker images"
         
 
         // Pushing to ECR
-            sh "sudo docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
+            sh "docker push ${REPOSITORY_URI}:${env.IMAGE_TAG}"
         }
      catch (Exception e) {
         echo "Failed to build and push Docker image: ${e.getMessage()}"
