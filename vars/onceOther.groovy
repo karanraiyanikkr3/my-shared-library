@@ -1,4 +1,4 @@
-def otherMethod(String DIR,String PORTAL) {
+def otherMethod(String PORTAL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = PORTAL
     env.IMAGE_TAG = "latest"
@@ -11,8 +11,8 @@ def otherMethod(String DIR,String PORTAL) {
             sh "aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
         
         // Building Docker image
-            sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
-//            sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} ."
+       //     sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} $DIR"
+               sh "docker build -t ${REPOSITORY_URI}:${env.IMAGE_TAG} ."
             sh "docker images"
         
 
