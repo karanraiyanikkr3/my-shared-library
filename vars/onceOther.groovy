@@ -2,7 +2,7 @@ def otherMethod(String DIR,String PORTAL) {
     env.AWS_DEFAULT_REGION = "us-east-1"
     env.IMAGE_REPO_NAME = PORTAL
     env.IMAGE_TAG = "latest"
-    env.AWS_ACCOUNT_ID = "885753452070"
+    env.AWS_ACCOUNT_ID = "688518490738"
     env.REPOSITORY_URI = "${AWS_ACCOUNT_ID}.dkr.ecr.${env.AWS_DEFAULT_REGION}.amazonaws.com/${env.IMAGE_REPO_NAME}portal"
 
     try {
